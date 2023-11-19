@@ -41,9 +41,14 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/product', async(req, res) => {
+            const cursor = coffeeCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
         app.post('/coffee', async(req, res) => {
             const newCoffee = req.body;
-            console.log(newCoffee);
             const result = await coffeeCollection.insertOne(newCoffee);
             res.send(result);
         })
