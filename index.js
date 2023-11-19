@@ -63,6 +63,32 @@ async function run() {
             res.send(result);
         })
 
+        // specific sinngle data
+        app.get('/product/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await coffeeCollection.findOne(query);
+            res.send(result);
+        })
+
+        // update coffee api
+        app.put('/product/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updatedProduct = req.body;
+            const product = {
+                $set: {
+                    name: updatedProduct.name,
+                    chef: updatedProduct.chef,
+                    price: updatedProduct.price,
+                    photo: updatedProduct.photo
+                }
+            }
+            const result = await coffeeCollection.updateOne(filter, product,options);
+            res.send(result);
+        })
+
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
